@@ -7,7 +7,10 @@ const N8N_URL = 'https://dev-n8n.sukhee.mx/webhook/chatwoot/available_actions';
 app.get('/available_actions', async (req, res) => {
   try {
     const resp = await axios.get(N8N_URL);
-    res.json(resp.data[0].available_actions);
+    // Asegura que siempre accedes al primer objeto y al campo "available_actions"
+    const actions = resp.data[0]?.available_actions;
+    if (!actions) throw new Error('No available_actions found in response');
+    res.json(actions);
   } catch(e) {
     res.status(500).json({error: e.message});
   }
